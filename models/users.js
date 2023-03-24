@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    account: {
+    email: {
       allowNull: false,
       type: DataTypes.STRING
     },
