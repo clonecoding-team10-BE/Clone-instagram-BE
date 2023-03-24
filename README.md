@@ -18,7 +18,11 @@
   👉 정규표현식, 중복 체크는 프론트엔드와 협의 후 결정 필수
   </br>
   👉 구현이 완료되면 비밀번호 암호화도 적용해보기!
-
+</br>
+✅ 무한스크롤
+</br>
+  👉 인스타그램 구현을 위해서 무한스크롤 기능 구현 예정
+  
 ## ✔사용한 라이브러리
 ``` JS
 npm i cookie-parser dotenv express sequelize jsonwebtoken mysql2 
