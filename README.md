@@ -1,4 +1,4 @@
-# mini-project-myarchiveBE
+# Clone-Instagram-BE
 🤘 항해99 클론코딩 프로젝트 10조 백앤드 협업 git 입니다.
 
 ## ✔프로젝트 소개
