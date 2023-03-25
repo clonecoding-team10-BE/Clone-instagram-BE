@@ -13,6 +13,7 @@ router.post(
     check('nickname', '닉네임이 필요합니다').notEmpty(),
     check('password', '비밀번호는 6자 이상 20자 이하로 작성해야 합니다').isLength({ min: 6, max: 20 }),
     check('password', '비밀번호가 필요합니다').notEmpty(),
+    check('profileImg', '프로필이미지가 필요합니다').notEmpty(),
     ],
     async (req, res) => {
         // Check if the input data is valid
@@ -21,7 +22,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
         try {
-            const { email, password, nickname } = req.body;
+            const { email, password, nickname, profileImg } = req.body;
             // accout가 이미 등록된 상태라면
             let emailData = await Users.findOne({ where: { email } });
             if (emailData) {
@@ -40,6 +41,7 @@ router.post(
                 email,
                 password: hashedPassword,
                 nickname,
+                profileImg,
             });
 
             return res.status(201).json({ "message": "회원 가입에 성공하였습니다." });
