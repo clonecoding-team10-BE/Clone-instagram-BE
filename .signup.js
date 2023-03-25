@@ -1,4 +1,3 @@
-// Import necessary modules
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -7,7 +6,6 @@ const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
-// Define the route for sign-up
 router.post(
   '/signup',
   [
@@ -22,35 +20,31 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
+    
     const { name, username, email, password } = req.body;
 
     try {
       // Check if the email is already registered
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ where: { email } });
       if (user) {
         return res.status(400).json({ errors: [{ msg: 'Email is already registered' }] });
       }
 
       // Check if the username is already taken
-      user = await User.findOne({ username });
+      user = await User.findOne({ where: { username } });
       if (user) {
         return res.status(400).json({ errors: [{ msg: 'Username is already taken' }] });
       }
 
       // Create a new user object with hashed password
-      user = new User({
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      user = await User.create({
         name,
         username,
         email,
-        password,
+        password: hashedPassword,
       });
-
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
-
-      // Save the user object to the database
-      await user.save();
 
       // Create and return a JWT token
       const payload = {
