@@ -9,12 +9,22 @@ const router = express.Router()
 router.post("/", authMiddleware, async (req, res) => {
   const { userId } = res.locals.user;
   const { img, content } = req.body;
-  await Posts.create({
-    userId,
-    img,
-    content
-  })
-  res.status(200).json({ "message": "게시글 작성에 성공하였습니다." })
+  try {
+    if (!req.body.hasOwnProperty('img')) {
+      return res.status(410).json({ "errorMessage": "이미지를 업로드해주세요" })
+    } else if (!req.body.hasOwnProperty('content')) {
+      return res.status(410).json({ "errorMessage": "게시글을 작성해주세요" })
+    }
+    await Posts.create({
+      userId,
+      img,
+      content
+    })
+    res.status(200).json({ "message": "게시글 작성에 성공하였습니다." })
+  }catch(err){
+    res.status(400).json({"errorMessage": "예상치 못한 에러가 발생하였습니다."})
+  }
+
 })
 
 //게시글 전체 조회
