@@ -74,7 +74,7 @@ router.get("/", async (req, res) => {
     res.status(200).json({ postList })
 })
 
-router.put('/posts/:postId', authMiddleware, async (req, res) => {
+router.put('/posts/:postId',authmiddleware, async (req, res) => {
   const { postId } = req.params;
   const { content } = req.body;
 // 게시글 수정 
@@ -104,7 +104,7 @@ router.put('/posts/:postId', authMiddleware, async (req, res) => {
 });
 
 // 게시글 삭제
-router.delete('/posts/:postId', authMiddleware, async (req, res) => {
+router.delete('/posts/:postId', authmiddleware, async (req, res) => {
     const { postId } = req.params;
   
     try {
