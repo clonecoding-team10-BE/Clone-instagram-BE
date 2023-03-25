@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      account: {
+      email: {
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -18,6 +18,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       nickname: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      profileImg: {
         allowNull: false,
         type: Sequelize.STRING
       },
