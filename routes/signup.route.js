@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = rquire('bcryptjs');
+const bcrypt = npmrquire('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {check, validationResult} = require('expresss-validator') //HTTP 요청에서 입력 데이터를 검증하기 위한 미들웨어
 const User = require('../models/users');
@@ -8,10 +8,10 @@ const authMiddleware = require('../middlewares/auth-middleware');
 
 router.post(
     '/signup',
-    [
+    [   check('email', '이메일 형식이 올바르지 않습니다').isEmail(),
         check('email', '이메일이 필요합니다').notEmpty(),
         check('nickname', '닉네임이 필요합니다').notEmpty(),
-        check('password', '비밀번호가 6자 이상 필요합니다').isLength({ min: 6 }),
+        check('password', '비밀번호는 6자 이상 20자 이하로 작성해야 합니다').isLength({ min: 6, max: 20 }),
         check('password', '비밀번호가 필요합니다').notEmpty(),
     ],
     async (req, res) => {
