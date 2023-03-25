@@ -18,23 +18,28 @@ router.post("/", authmiddleware, async (req, res) => {
 
 //게시글 전체 조회
 //localhost:3000/posts GET
-router.get("/", authmiddleware, async (req, res) => {
-    const { userId } = res.locals.user;
+router.get("/", async (req, res) => {
+    // const { userId } = res.locals.user;
+    const { userId } = req.body
     const posts = await Posts.findAll({
         raw: true,
-        attributes: ["postId", "User.nickname", "img", "content", "likeCount", "Likes.isLike", "createdAt", "updatedAt"],
+        attributes: ["postId", "User.nickname", "img", "content", "likeCount", "createdAt", "updatedAt"],
         order: [['postId', 'DESC']], //최신순 정렬
         include: [{
             model: Users,
             attributes: []
-        }, {
-            model: Likes,
-            attributes: [],
-            where: { userId }
         }]
+        // }, {
+        //     model: Likes,
+        //     attributes: [],
+        //     where: { userId }
+        // }]
     })
+
     //isLike가 존재하지않을때 -> 좋아요를 누르지 않았을 때
     //isLike 값을 강제로 false 반환
+
+
     const postList = await Promise.all(posts.map(async (post) => {
         const postId = post.postId
         //postId에 해당하는 comment도 같이 response
@@ -42,20 +47,23 @@ router.get("/", authmiddleware, async (req, res) => {
             where: { postId },
             order: [['commentId', 'DESC']], //최신순 정렬
         })
-
-        if (post.isLike === null) {
-            post.isLike = false
+        const likes = await Likes.findOne({
+            where: { userId, postId }
+        })
+        // console.log(likes)
+        if (!likes) {
+            isLike = "false"
         } else {
-            post.isLike = true
+            isLike = "true"
         }
-        // console.log(post.isLike)
+
         return {
             "postId": post.postId,
             "nickname": post.nickname,
             "img": post.img,
             "content": post.content,
             "likeCount": post.likeCount,
-            "isLike": post.isLike,
+            "isLike": isLike,
             "createdAt": post.createdAt,
             "updatedAt": post.updatedAt,
             "comment": comments
