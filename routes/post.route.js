@@ -67,13 +67,10 @@ router.get("/", authMiddleware, async (req, res) => {
   res.status(200).json({ postList })
 })
 
-<<<<<<< HEAD
-router.put('/posts/:postId',authmiddleware, async (req, res) => {
-=======
 // 게시글 수정 
 router.put('/:postId', authMiddleware, async (req, res) => {
   const { userId } = res.locals.user;
->>>>>>> 74ba3f75f78c9ca9365390aed38db79c835130fd
+
   const { postId } = req.params;
   const { content } = req.body;
   if (!content) {
@@ -102,7 +99,6 @@ router.put('/:postId', authMiddleware, async (req, res) => {
 });
 
 // 게시글 삭제
-<<<<<<< HEAD
 router.delete('/posts/:postId', authmiddleware, async (req, res) => {
     const { postId } = req.params;
   
@@ -123,7 +119,10 @@ router.delete('/posts/:postId', authmiddleware, async (req, res) => {
     } catch (err) {
       console.error(err.message);
       res.status(500).send('서버에러가 발생했습니다');
-=======
+    }
+  });
+  
+  module.exports = router;
 router.delete('/:postId', authMiddleware, async (req, res) => {
   const { postId } = req.params;
   const { userId } = res.locals.user;
@@ -133,7 +132,6 @@ router.delete('/:postId', authMiddleware, async (req, res) => {
 
     if (!post) {
       return res.status(404).json({ "errorMessage": "게시글이 존재하지 않습니다." });
->>>>>>> 74ba3f75f78c9ca9365390aed38db79c835130fd
     }
 
     if (post.userId !== userId) {

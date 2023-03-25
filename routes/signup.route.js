@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< HEAD
 const bcrypt =require('bcryptjs');
-=======
-const bcrypt = require('bcryptjs');
->>>>>>> 74ba3f75f78c9ca9365390aed38db79c835130fd
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator') //HTTP 요청에서 입력 데이터를 검증하기 위한 미들웨어
 const { Users } = require('../models');
