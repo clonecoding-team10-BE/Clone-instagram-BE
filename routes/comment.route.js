@@ -1,14 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const { Posts, Comments, Users } = require("../models");
-// const authMiddleware = require("../middlewares/auth-middleware");
+const authMiddleware = require("../middlewares/auth-middleware");
 
-// 댓글 작성 API (일단 authMiddleware 미적용)
-router.post('/:postId/comments', async(req, res) => {
+// 댓글 작성 API 
+//localhost:3000/posts/:postId/comments
+router.post('/:postId/comments',authMiddleware, async(req, res) => {
     try {
         const { postId } = req.params;
-        const { userId, nickname, comment } = req.body; // 우선은 유저고유번호, 닉네임, 댓글 써야 작성 가능하게 조치
-        // const { userId, nickname } = res.locals.user;
+        const { comment } = req.body; // 우선은 유저고유번호, 닉네임, 댓글 써야 작성 가능하게 조치
+        const { userId, nickname } = res.locals.user;
 
         // 게시글 존재 확인
         const post = await Posts.findOne({
@@ -41,10 +42,9 @@ router.post('/:postId/comments', async(req, res) => {
 });
 
 // 댓글 조회 API
-router.get('/:postId/comments', async(req, res) =>{
+router.get('/:postId/comments',authMiddleware, async(req, res) =>{
     try {
         const { postId } = req.params;
-        // const { userId } = res.locals.user;
 
         const comments = await Comments.findAll({
             attributes: [
@@ -74,11 +74,11 @@ router.get('/:postId/comments', async(req, res) =>{
     }
 });
 
-// 댓글 삭제 API (일단 authMiddleware 미적용)
-router.delete("/:postId/comments/:commentId", async(req, res) => {
+// 댓글 삭제 API 
+router.delete("/:postId/comments/:commentId",authMiddleware, async(req, res) => {
     try {
         const { postId, commentId } = req.params;
-        // const { userId } = res.locals.user;
+        const { userId } = res.locals.user;
         // 게시글 존재 확인
         const post = await Posts.findOne({
             where: { postId: postId }
@@ -95,10 +95,10 @@ router.delete("/:postId/comments/:commentId", async(req, res) => {
             return;
         }
         // 로그인한 회원의 유저 아이디와 댓글 작성한 회원 아이디가 다른 경우
-        // if (existComment.userId !== userId)  {
-        //     res.status(403).json({ errorMessage: "댓글 삭제의 권한이 존재하지 않습니다."});
-        //     return;
-        // }
+        if (existComment.userId !== userId)  {
+            res.status(403).json({ errorMessage: "댓글 삭제의 권한이 존재하지 않습니다."});
+            return;
+        }
         // 댓글의 권한을 확인하고, 댓글을 삭제합니다.
         await Comments.destroy(
             { where: { commentId: commentId } }
