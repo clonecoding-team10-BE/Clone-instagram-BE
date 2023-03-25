@@ -99,7 +99,7 @@ router.put('/:postId', authMiddleware, async (req, res) => {
 });
 
 // 게시글 삭제
-router.delete('/posts/:postId', authmiddleware, async (req, res) => {
+router.delete('/:postId', authMiddleware, async (req, res) => {
     const { postId } = req.params;
   
     try {
