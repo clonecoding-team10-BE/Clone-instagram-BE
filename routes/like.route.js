@@ -2,17 +2,18 @@ const express = require('express')
 const router = express.Router()
 const { Likes, Posts } = require('../models');
 const authMiddleware = require("../middlewares/auth-middleware.js");
+const CustomError = require("../middlewares/errorhandler.js")
 
 // 게시글 좋아요 업데이트 API
 // localhost:3000/posts/:postId/like
-router.put('/:postId/like', authMiddleware, async (req, res) => {
+router.put('/:postId/like', authMiddleware, async (req, res,next) => {
   try {
     const { postId } = req.params;
     const { userId } = res.locals.user; // 토큰을 검사하여 해당 회원 확인
     const isExistPost = await Posts.findByPk(postId); // 게시글 있는지 확인
     // 게시글 없을 때
     if (!isExistPost) {
-      return res.status(404).json({ errorMessage: '게시글이 존재하지 않습니다.' });
+      throw new CustomError("게시글이 존재하지 않습니다", 400)
     }
 
     // postId와 userId 검색
@@ -28,7 +29,6 @@ router.put('/:postId/like', authMiddleware, async (req, res) => {
         { where: { postId: postId } }
       )
       return res.status(200).json({ message: '좋아요 등록에 성공하였습니다' });
-
     } else {
       const likes = isExistPost.likecount - 1;
       await Likes.destroy(
@@ -41,8 +41,7 @@ router.put('/:postId/like', authMiddleware, async (req, res) => {
       return res.status(200).json({ message: '좋아요 취소에 성공하였습니다.' });
     }
   } catch (error) {
-    console.error(`${req.method} ${req.originalUrl} : ${error.message}`);
-    return res.status(400).json({ errorMessage: '예기치 않은 오류가 발생하였습니다.' });
+    next(err)
   }
 });
 
