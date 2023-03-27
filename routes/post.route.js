@@ -1,4 +1,5 @@
 const express = require('express')
+const CustomError = require("../middlewares/errorhandler.js")
 const { Posts, Likes, Users, Comments } = require("../models")
 const authMiddleware = require("../middlewares/auth-middleware.js")
 const router = express.Router()
@@ -6,14 +7,14 @@ const router = express.Router()
 
 //게시글 작성
 //localhost:3000/posts POST
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, async (req, res, next) => {
   const { userId } = res.locals.user;
   const { img, content } = req.body;
   try {
     if (!req.body.hasOwnProperty('img')) {
-      return res.status(410).json({ "errorMessage": "이미지를 업로드해주세요" })
+      throw new CustomError("이미지를 업로드해주세요", 410)
     } else if (!req.body.hasOwnProperty('content')) {
-      return res.status(410).json({ "errorMessage": "게시글을 작성해주세요" })
+      throw new CustomError("게시글을 작성해주세요", 410)
     }
     await Posts.create({
       userId,
@@ -22,14 +23,14 @@ router.post("/", authMiddleware, async (req, res) => {
     })
     res.status(200).json({ "message": "게시글 작성에 성공하였습니다." })
   } catch (err) {
-    res.status(400).json({ "errorMessage": "예상치 못한 에러가 발생하였습니다." })
+    next(err)
   }
 
 })
 
 //게시글 전체 조회
 //localhost:3000/posts GET
-router.get("/", authMiddleware, async (req, res) => {
+router.get("/", authMiddleware, async (req, res, next) => {
   const { userId } = res.locals.user;
   try {
     const posts = await Posts.findAll({
@@ -77,29 +78,28 @@ router.get("/", authMiddleware, async (req, res) => {
 
     res.status(200).json({ postList })
   } catch (err) {
-    res.status(400).json({ "errorMessage": "예상치 못한 에러가 발생하였습니다." })
+    next(err)
   }
 
 })
 
 // 게시글 수정 
-router.put('/:postId', authMiddleware, async (req, res) => {
+router.put('/:postId', authMiddleware, async (req, res, next) => {
   const { userId } = res.locals.user;
   const { postId } = req.params;
   const { content } = req.body;
   if (!content) {
-    return res.status(410).json({ "errorMessage": "수정할 게시글을 입력해주세요." });
+    throw new CustomError("수정할 게시글을 입력해주세요", 410)
   }
-
   try {
-    const post = await Posts.findByPk(postId); 
+    const post = await Posts.findByPk(postId);
     // findBuPk()는 sequelize에서 제공하는 메서드 PrimaryKey에 해당하는 값을 찾아 반환(postId값에 해당하는 게시물 조회)
 
     if (!post) {
-      return res.status(404).json({ "errorMessage": "게시글이 존재하지 않습니다." });
+      throw new CustomError("게시글이 존재하지 않습니다", 404)
     }
     if (post.userId !== userId) {
-      return res.status(403).json({ "errorMessage": "게시글의 수정 권한이 존재하지 않습니다." });
+      throw new CustomError("게시글의 수정 권한이 존재하지 않습니다", 403)
     }
     //수정업데이트
     post.content = content;
@@ -107,8 +107,7 @@ router.put('/:postId', authMiddleware, async (req, res) => {
 
     res.status(200).json({ "message": "게시글이 성공적으로 수정되었습니다." });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('서버에러가 발생했습니다');
+    next(err)
   }
 });
 
@@ -121,10 +120,10 @@ router.delete('/:postId', authMiddleware, async (req, res) => {
     const post = await Posts.findByPk(postId);
 
     if (!post) {
-      return res.status(404).json({ "errorMessage": "게시글이 존재하지 않습니다." });
+      throw new CustomError("게시글이 존재하지 않습니다", 404)
     }
     if (post.userId !== userId) {
-      return res.status(403).json({ "errorMessage": "게시글의 삭제 권한이 존재하지 않습니다." });
+      throw new CustomError("게시글의 삭제 권한이 존재하지 않습니다", 403)
     }
 
     //delete도 사용가능 하나 destroy는 해당 레코드를 직접 삭제하는 메소드 sequelize에서는 destroy를 사용하는 것이 일반적(안전성)
@@ -132,8 +131,7 @@ router.delete('/:postId', authMiddleware, async (req, res) => {
 
     res.status(200).json({ "message": "게시글 삭제에 성공하였습니다." });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('서버에러가 발생했습니다');
+    next(err)
   }
 });
 
