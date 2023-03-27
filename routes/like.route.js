@@ -3,7 +3,8 @@ const router = express.Router()
 const { Likes, Posts } = require('../models');
 const authMiddleware = require("../middlewares/auth-middleware.js");
 
-// 게시글 좋아요 업데이트 API (일단 authMiddleware 적용 X, 추후 수정 필요 함)
+// 게시글 좋아요 업데이트 API
+// localhost:3000/posts/:postId/like
 router.put('/:postId/like', authMiddleware, async (req, res) => {
   try {
     const { postId } = req.params;
@@ -19,7 +20,6 @@ router.put('/:postId/like', authMiddleware, async (req, res) => {
     // 좋아요 유무 따져서 좋아요가 없으면 좋아요 등록, 반대인 경우는 좋아요 취소
     if (!isLiked) {
       const likes = isExistPost.likecount + 1;
-      console.log(likes)
       await Likes.create(
         { postId: postId, userId: userId, isLike: true }
       );
@@ -31,7 +31,6 @@ router.put('/:postId/like', authMiddleware, async (req, res) => {
 
     } else {
       const likes = isExistPost.likecount - 1;
-      console.log(likes)
       await Likes.destroy(
         { where: { postId: postId, userId: userId } }
       );

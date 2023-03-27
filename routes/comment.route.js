@@ -42,6 +42,7 @@ router.post('/:postId/comments',authMiddleware, async(req, res) => {
 });
 
 // 댓글 조회 API
+//localhost:3000/posts/:postId/comments
 router.get('/:postId/comments',authMiddleware, async(req, res) =>{
     try {
         const { postId } = req.params;
@@ -75,6 +76,7 @@ router.get('/:postId/comments',authMiddleware, async(req, res) =>{
 });
 
 // 댓글 삭제 API 
+//localhost:3000/posts/:postId/comments/:commentId
 router.delete("/:postId/comments/:commentId",authMiddleware, async(req, res) => {
     try {
         const { postId, commentId } = req.params;
