@@ -38,7 +38,7 @@ class PostService {
         return await Promise.all(posts.map(async (post) => {
             const postId = post.postId
             //postId에 해당하는 comment도 같이 response
-            const comments = await this.CommentRepository.getComment({postId})
+            const comments = await this.CommentRepository.getLimitComment({postId})
 
             //isLike가 존재하지않을때 -> 좋아요를 누르지 않았을 때
             //isLike 값을 강제로 false 반환
@@ -54,6 +54,7 @@ class PostService {
                 "postId": post.postId,
                 "nickname": post.nickname,
                 "img": post.img,
+                "profileImg" : post.profileImg,
                 "content": post.content,
                 "likeCount": post.likeCount,
                 "isLike": isLike,

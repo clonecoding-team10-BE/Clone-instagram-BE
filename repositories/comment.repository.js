@@ -39,7 +39,29 @@ class CommentRepository {
             order: [['createdAt', 'DESC']], // 작성 날짜 기준으로 내림차순
             raw: true, // JSON 형태로 반환된 데이터를 처리
         })
-
+    }
+    getLimitComment = async ({ postId }) => {
+        return await Comments.findAll({
+            attributes: [
+                "commentId",
+                "postId",
+                "User.nickname",
+                "User.profileImg",
+                "comment",
+                "createdAt",
+                "updatedAt",
+            ],
+            include: [
+                {
+                    model: Users,
+                    attributes: [],
+                }
+            ],
+            where: [{ postId: postId }],
+            order: [['createdAt', 'DESC']], // 작성 날짜 기준으로 내림차순
+            limit : 3,
+            raw: true, // JSON 형태로 반환된 데이터를 처리
+        })
     }
     checkComment = async ({ commentId }) => {
         // 댓글을 조회합니다.

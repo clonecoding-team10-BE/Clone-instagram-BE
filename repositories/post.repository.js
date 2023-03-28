@@ -24,7 +24,7 @@ class PostRepository {
     findAllPost = async () => {
         return await Posts.findAll({
             raw: true,
-            attributes: ["postId", "User.nickname", "img", "content", "likeCount", "createdAt", "updatedAt"],
+            attributes: ["postId", "User.nickname","User.profileImg" ,"img", "content", "likeCount", "createdAt", "updatedAt"],
             order: [['postId', 'DESC']], //최신순 정렬
             include: [{
                 model: Users,
