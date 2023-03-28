@@ -8,14 +8,15 @@ class PostController {
 
     CreatePost = async (req, res, next) => {
         const { userId } = res.locals.user;
-        const { img, content } = req.body;
+        const { content } = req.body;
         try {
-            if (!req.body.hasOwnProperty('img')) {
+            if (!req.file) {
                 throw new CustomError("이미지를 업로드해주세요", 410)
-            } else if (!req.body.hasOwnProperty('content')) {
+            } else if (!content) {
                 throw new CustomError("게시글을 작성해주세요", 410)
             }
-            await this.PostService.CreatePost({ userId, img, content })
+            const imagefile = `/postImg/${req.file.filename}`
+            await this.PostService.CreatePost({ userId, imagefile , content })
             res.status(200).json({ "message": "게시글 작성에 성공하였습니다." })
         } catch (err) {
             next(err)
@@ -25,48 +26,8 @@ class PostController {
     getPost = async (req, res, next) => {
         const { userId } = res.locals.user;
         try {
-            const posts = await Posts.findAll({
-                raw: true,
-                attributes: ["postId", "User.nickname", "img", "content", "likeCount", "createdAt", "updatedAt"],
-                order: [['postId', 'DESC']], //최신순 정렬
-                include: [{
-                    model: Users,
-                    attributes: []
-                }]
-            })
-
-            const postList = await Promise.all(posts.map(async (post) => {
-                const postId = post.postId
-                //postId에 해당하는 comment도 같이 response
-                const comments = await Comments.findAll({
-                    where: { postId },
-                    order: [['commentId', 'DESC']], //최신순 정렬
-                })
-
-                //isLike가 존재하지않을때 -> 좋아요를 누르지 않았을 때
-                //isLike 값을 강제로 false 반환
-                const likes = await Likes.findOne({
-                    where: { userId, postId }
-                })
-                // console.log(likes)
-                if (!likes) {
-                    isLike = false
-                } else {
-                    isLike = true
-                }
-
-                return {
-                    "postId": post.postId,
-                    "nickname": post.nickname,
-                    "img": post.img,
-                    "content": post.content,
-                    "likeCount": post.likeCount,
-                    "isLike": isLike,
-                    "createdAt": post.createdAt,
-                    "updatedAt": post.updatedAt,
-                    "comment": comments
-                }
-            }))
+            const posts = await this.PostService.findAllPost()
+            const postList = await this.PostService.mapPost({ posts, userId })
 
             res.status(200).json({ postList })
         } catch (err) {
@@ -80,9 +41,24 @@ class PostController {
         const { postId } = req.params;
         const { content } = req.body;
         try {
-            const post  = await this.PostService.checkPost({ postId, userId })
-            await this.PostService.modifyPost({ content,post })
+            const post = await this.PostService.checkPost({ postId, userId })
+            await this.PostService.modifyPost({ content, post })
             res.status(200).json({ "message": "게시글이 성공적으로 수정되었습니다." });
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    deletePost = async (req, res) => {
+        const { postId } = req.params;
+        const { userId } = res.locals.user;
+
+        try {
+            const post = await this.PostService.checkPost({ postId, userId })
+            
+            //delete도 사용가능 하나 destroy는 해당 레코드를 직접 삭제하는 메소드 sequelize에서는 destroy를 사용하는 것이 일반적(안전성)
+            await this.PostService.deletePost({post})
+            res.status(200).json({ "message": "게시글 삭제에 성공하였습니다." });
         } catch (err) {
             next(err)
         }

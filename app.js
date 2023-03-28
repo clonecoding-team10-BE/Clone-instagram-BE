@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+var path = require('path');
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const globalRouter = require("./routes/index.js");
@@ -17,7 +18,9 @@ app.use(
 app.use(cookieParser())
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname,'uploads'))) //정적파일을 프론트에서 사용할수있게 해주는 미들웨어
 app.use('/', [globalRouter]);
+
 //에러핸들링 미들웨어
 app.use((err, req, res, next) => {
     res.status(err.status || 500);

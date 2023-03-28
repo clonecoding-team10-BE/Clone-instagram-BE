@@ -25,7 +25,8 @@
   
 ## ✔사용한 라이브러리
 ``` JS
-npm i cookie-parser dotenv express sequelize jsonwebtoken mysql2 
+npm i cookie-parser dotenv express sequelize jsonwebtoken mysql2 bcrypt cors
+npm i express-validator bcrypt cors validator
 npm i -D sequelize-cli nodemon
 ```
 ## ✔프로젝트 구조
@@ -33,26 +34,46 @@ npm i -D sequelize-cli nodemon
 ▼ clone-instagram-be
   ▼ config
       config.js
+  ▼ controllers
+      post.controller.js
+      comment.controller.js
+      login.controller.js
+      signup.controller.js
+      like.controller.js
   ▼ middlewares
-    auth-middleware.js
+      auth-middleware.js
+      errorhandler.js
   ▼ migrations
-    20230324041144-create-users.js
-    20230324014446-create-posts.js
-    20230324014447-create-comments.js
-    20230324014449-create-likes.js
+      20230324041144-create-users.js
+      20230324014446-create-posts.js
+      20230324014447-create-comments.js
+      20230324014449-create-likes.js
   ▼ models
-    index.js
-    posts.js
-    users.js
-    comment.js
-    likes.js
+      index.js
+      posts.js
+      users.js
+      comment.js
+      likes.js
+  ▼ repositories
+      post.repository.js
+      comment.repository.js
+      login.repository.js
+      signup.repository.js
+      like.repository.js
   ▼ routes
-    index.js
-    comment.route.js
-    post.route.js
-    login.route.js
-    signup.route.js
-    like.route.js
+      index.js
+      comment.route.js
+      post.route.js
+      login.route.js
+      signup.route.js
+      like.route.js
+  ▼ services
+      post.service.js
+      comment.service.js
+      login.service.js
+      signup.service.js
+      like.service.js
+  ▼ uploads
   app.js
 ```
 구현이 완료되면 3 Layer Architecture 패턴으로 수정 예정입니다.
@@ -73,8 +94,12 @@ npm i -D sequelize-cli nodemon
 부수적인 기능보다는 메인 기능에 집중해서 완벽하게 구현하기
 
 ## ✔API 설계가 완료되면 추가적으로 해볼 것
-에러핸들링 미들웨어 적용해서 에러핸들링하기
+에러핸들링 미들웨어 적용해서 에러핸들링하기⭕
 </br>
 유저 정보에 대한 보안강화하기
+</br>
+👉 비밀번호 암호화 적용⭕ 
+</br>
+👉 더 강화할 수 있는 방법 찾아보기 
 </br>
 swagger 적용해보기
