@@ -9,7 +9,7 @@ const router = express.Router()
 //multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/')  //uploads라는 폴더에 저장할꺼다
+        cb(null, 'uploads/postImg/')  //uploads라는 폴더에 저장할꺼다
     },
     filename: function (req, file, cb) {
         const ext = path.extname(file.originalname)
