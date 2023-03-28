@@ -3,10 +3,10 @@ const { Posts, Likes, Users, Comments } = require("../models")
 class PostRepository {
     constructor() { }
 
-    CreatePost = async ({ userId, img, content }) => {
+    CreatePost = async ({ userId, imagefile, content }) => {
         await Posts.create({
             userId,
-            img,
+            img : imagefile,
             content
         })
     }

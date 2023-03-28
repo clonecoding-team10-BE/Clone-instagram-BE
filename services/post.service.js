@@ -6,8 +6,8 @@ class PostService {
         this.PostRepository = new PostRepository();
     }
 
-    CreatePost = async ({ userId, img, content }) => {
-        await this.PostRepository.CreatePost({ userId, img, content })
+    CreatePost = async ({ userId, imagefile, content }) => {
+        await this.PostRepository.CreatePost({ userId, imagefile, content })
     }
 
     modifyPost = async ({ content, post }) => {

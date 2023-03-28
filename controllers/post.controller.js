@@ -8,14 +8,15 @@ class PostController {
 
     CreatePost = async (req, res, next) => {
         const { userId } = res.locals.user;
-        const { img, content } = req.body;
+        const { content } = req.body;
         try {
-            if (!req.body.hasOwnProperty('img')) {
+            if (!req.file) {
                 throw new CustomError("이미지를 업로드해주세요", 410)
-            } else if (!req.body.hasOwnProperty('content')) {
+            } else if (!content) {
                 throw new CustomError("게시글을 작성해주세요", 410)
             }
-            await this.PostService.CreatePost({ userId, img, content })
+            const imagefile = req.file.filename
+            await this.PostService.CreatePost({ userId, imagefile , content })
             res.status(200).json({ "message": "게시글 작성에 성공하였습니다." })
         } catch (err) {
             next(err)
