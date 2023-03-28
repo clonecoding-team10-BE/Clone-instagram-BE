@@ -30,8 +30,8 @@ class PostService {
         }
         return post;
     }
-    findAllPost = async () => {
-        return await this.PostRepository.findAllPost()
+    findLimitPost = async ({start,pageSize}) => {
+        return await this.PostRepository.findLimitPost({start,pageSize})
     }
 
     mapPost = async ({ posts, userId }) => {

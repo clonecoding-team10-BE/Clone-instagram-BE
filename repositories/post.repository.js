@@ -21,9 +21,11 @@ class PostRepository {
         post.content = content;
         await post.save();
     }
-    findAllPost = async () => {
+    findLimitPost = async ({start,pageSize}) => {
         return await Posts.findAll({
             raw: true,
+            limit: pageSize,
+            offset:start ,
             attributes: ["postId", "User.nickname","User.profileImg" ,"img", "content", "likeCount", "createdAt", "updatedAt"],
             order: [['postId', 'DESC']], //최신순 정렬
             include: [{

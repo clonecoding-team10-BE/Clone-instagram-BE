@@ -22,7 +22,6 @@ class CommentRepository {
         return await Comments.findAll({
             attributes: [
                 "commentId",
-                "postId",
                 "User.nickname",
                 "User.profileImg",
                 "comment",
