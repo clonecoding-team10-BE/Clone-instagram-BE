@@ -1,4 +1,4 @@
-const { Posts, Likes, Users, Comments } = require("../models")
+const { Posts, Users } = require("../models")
 
 class PostRepository {
     constructor() { }
@@ -10,8 +10,12 @@ class PostRepository {
             content
         })
     }
-    findByPK = async ({ postId }) => {
-        return await Posts.findByPk(postId);
+    CheckPost = async ({ postId }) => {
+        const post = await Posts.findByPk(postId);
+        if (!post) {
+            throw new CustomError("게시글이 존재하지 않습니다", 404)
+        }
+        return post;
     }
     modifyPost = async ({ content, post }) => {
         post.content = content;
@@ -28,19 +32,16 @@ class PostRepository {
             }]
         })
     }
-    findAllComment = async ({ postId }) => {
-        return await Comments.findAll({
-            where: { postId },
-            order: [['commentId', 'DESC']], //최신순 정렬
-        })
-    }
-    findOneLike = async ({ userId, postId }) => {
-        return await Likes.findOne({
-            where: { userId, postId }
-        })
-    }
+    
     deleltePost = async ({ post }) => {
         await post.destroy();
+    }
+
+    likeUpdate = async ({like,postId}) => {
+        await Posts.update(
+            { likecount: like },
+            { where: { postId: postId } }
+        )
     }
 }
 
