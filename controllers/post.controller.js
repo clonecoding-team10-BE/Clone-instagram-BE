@@ -15,7 +15,7 @@ class PostController {
             } else if (!content) {
                 throw new CustomError("게시글을 작성해주세요", 410)
             }
-            const imagefile = req.file.filename
+            const imagefile = `/postImg/${req.file.filename}`
             await this.PostService.CreatePost({ userId, imagefile , content })
             res.status(200).json({ "message": "게시글 작성에 성공하였습니다." })
         } catch (err) {

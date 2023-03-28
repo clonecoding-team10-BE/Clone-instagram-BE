@@ -4,6 +4,7 @@ const {check} = require('express-validator') //HTTP 요청에서 입력 데이�
 const SignupController = require('../controllers/signup.controller.js');
 const signupController = new SignupController();
 
+
 router.post(
     '/signup',
     [check('email', '이메일 형식이 올바르지 않습니다').isEmail(),
