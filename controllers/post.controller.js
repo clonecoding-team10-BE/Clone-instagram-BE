@@ -30,7 +30,7 @@ class PostController {
             const page = parseInt(pageInfo.page);
             const pageSize = parseInt(pageInfo.pageSize);
             if (!pageInfo || !pageSize) {
-                return res.status(400).json("쿼리입력해라짜식아")
+                throw new CustomError("쿼리를 입력해주세요 선생님", 410)
               }
               let start = 0;
             
