@@ -21,7 +21,7 @@ class LoginController {
       const user = await this.loginService.remainUser({ email, password });
       // Create a JWT token
       const token = jwt.sign({ nickname: user.nickname }, env.MYSQL_SECRETKEY);
-      res.cookie('authorization', `Bearer ${token}`, { httpOnly: false, secure: false });
+      res.cookie('authorization', `Bearer ${token}`, { httpOnly: false, secure: false, sameSite: false });
       return res.status(200).json({ message: '로그인에 성공하였습니다.' });
     } catch (err) {
       next(err);
