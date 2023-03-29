@@ -27,7 +27,7 @@ const logger = createLogger({
     ]
 });
 
- //배포환경에서는 콘솔에 찍지 않고 파일에만 저장하기
+//배포환경에서는 콘솔에 찍지 않고 파일에만 저장하기
 if (env.NODE_ENV !== "production") {
     logger.add(new transports.Console({
         level: "info",
