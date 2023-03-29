@@ -8,7 +8,7 @@ class LoginController {
     this.loginService = new LoginService();
   }
 
-  login = async (req, res, next)  => {
+  login = async (req, res, next) => {
     // Check if the input data is valid
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -16,12 +16,12 @@ class LoginController {
     }
 
     const { email, password } = req.body;
-    
+
     try {
-      const user = await this.loginService.remainUser({email, password});
+      const user = await this.loginService.remainUser({ email, password });
       // Create a JWT token
       const token = jwt.sign({ nickname: user.nickname }, env.MYSQL_SECRETKEY);
-      res.cookie('authorization', `Bearer ${token}`);
+      res.cookie('authorization', `Bearer ${token}`, { expires: new Date(Date.now() + 900000) ,httpOnly: false, secure: false, sameSite: false });
       return res.status(200).json({ message: '로그인에 성공하였습니다.' });
     } catch (err) {
       next(err);
