@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 var path = require('path');
+const logger = require("./config/logger.js");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const globalRouter = require("./routes/index.js");
@@ -26,10 +27,10 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500);
     err.message = err.message || '예상치 못한 에러가 발생하였습니다.'
   
-    console.error(err.stack)
+    logger.error(err.stack)
     res.json({errormessage : err.message});
 })
 
 app.listen(3000, () => {
-    console.log(` http://localhost:3000 `);
+    logger.info(` http://localhost:3000 `);
 })
