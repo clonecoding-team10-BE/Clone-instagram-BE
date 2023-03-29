@@ -35,7 +35,7 @@ const upload = multer({
 
 //게시글 작성
 //localhost:3000/posts POST
-router.post("/", authMiddleware,upload.single('img'), postcontroller.CreatePost)
+router.post("/", authMiddleware, upload.single('img'), postcontroller.CreatePost)
 
 //게시글 전체 조회
 //localhost:3000/posts GET
