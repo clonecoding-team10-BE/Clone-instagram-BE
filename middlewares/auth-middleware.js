@@ -6,8 +6,9 @@ const { Users } = require("../models");
 module.exports = async (req, res, next) => {
     try {
         const { Authorization } = req.headers.Authorization;
-        // const authorization = req.headers.authorization;
+        console.log("Authorization : ",Authorization)
         const [authType, authToken] = (Authorization ?? "").split(" ")
+        console.log("authType : ",authType, "authToken : ",authToken)
         // console.log(authType,":", authToken)
 
         if (authType !== "Bearer" || !authToken) {
@@ -19,7 +20,7 @@ module.exports = async (req, res, next) => {
         next();
 
     } catch (err) {
-        return res.status(400).json({ "errorMessage": "전달된 쿠키에서 오류가 발생하였습니다." })
+        return res.status(400).json({ "errorMessage": err.message })
     }
 
 }
