@@ -5,7 +5,7 @@ const { Users } = require("../models");
 
 module.exports = async (req, res, next) => {
     try {
-        const { Authorization } = req.cookies;
+        const { Authorization } = req.headers.Authorization;
         // const authorization = req.headers.authorization;
         const [authType, authToken] = (Authorization ?? "").split(" ")
         // console.log(authType,":", authToken)
