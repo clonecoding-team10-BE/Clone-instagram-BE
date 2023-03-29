@@ -5,9 +5,9 @@ const { Users } = require("../models");
 
 module.exports = async (req, res, next) => {
     try {
-        const { token } = req.cookies;
+        const { Authorization } = req.cookies;
         // const authorization = req.headers.authorization;
-        const [authType, authToken] = (token ?? "").split(" ")
+        const [authType, authToken] = (Authorization ?? "").split(" ")
         // console.log(authType,":", authToken)
 
         if (authType !== "Bearer" || !authToken) {
