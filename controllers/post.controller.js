@@ -26,7 +26,20 @@ class PostController {
     getPost = async (req, res, next) => {
         const { userId } = res.locals.user;
         try {
-            const posts = await this.PostService.findAllPost()
+            const pageInfo = req.query;
+            const page = parseInt(pageInfo.page);
+            const pageSize = parseInt(pageInfo.pageSize);
+            if (!pageInfo || !pageSize) {
+                throw new CustomError("쿼리를 입력해주세요 선생님", 410)
+              }
+              let start = 0;
+            
+              if (page <= 0) {
+                page = 1;
+              } else {
+                start = (page - 1) * pageSize;
+              }
+            const posts = await this.PostService.findLimitPost({start,pageSize})
             const postList = await this.PostService.mapPost({ posts, userId })
 
             res.status(200).json({ postList })
