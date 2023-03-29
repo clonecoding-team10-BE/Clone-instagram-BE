@@ -9,7 +9,7 @@ const app = express();
 app.use(
     cors({
         "Access-Control-Allow-Origin": "*",
-        credentials: true, //쿠키정책
+        'Access-Control-Allow-Credentials': true, //쿠키정책
         optionsSuccessStatus: 200
         //   exposedHeaders: ["token"],
     })
