@@ -20,6 +20,7 @@ class PostController {
             await this.PostService.CreatePost({ userId, imagefile, content })
             res.status(200).json({ "message": "게시글 작성에 성공하였습니다." })
         } catch (err) {
+            //에러발생 시 사진 업로드 취소
             if (req.file) {
                 fs.unlinkSync(__dirname + '/../uploads' + `/postImg/${req.file.filename}`);
             }
