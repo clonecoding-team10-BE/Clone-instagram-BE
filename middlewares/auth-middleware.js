@@ -16,6 +16,7 @@ module.exports = async (req, res, next) => {
             res.status(403).json({ "errorMessage": "로그인이 필요한 기능입니다" })
         }
         const { nickname } = jwt.verify(authToken, env.MYSQL_SECRETKEY)
+        
         const user = await Users.findOne({ where: { nickname: nickname } })
         res.locals.user = user;
         next();
