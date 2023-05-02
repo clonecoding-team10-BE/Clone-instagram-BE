@@ -1,0 +1,27 @@
+config:
+  target: http://localhost:3000
+  phases:
+    - duration: 30
+      arrivalRate: 10
+  defaults:
+    headers:
+      User-Agent: Artillery
+  payload:
+    skipHeader: true
+    path: "./data/data1.csv"
+    fields:
+      - email
+      - password
+
+scenarios:
+  - name: "로그인"
+    flow:
+      - get :
+          url: "/"
+      - post:
+          headers:
+            Content-Type: application/json
+          url: "/login"
+          json:
+            email: "{{email}}"
+            password: "{{password}}"
